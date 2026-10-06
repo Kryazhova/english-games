@@ -1,21 +1,21 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Where is the bunny?</title><link rel="stylesheet" href="style.css?v=illustrated-3"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="assets/room.webp" fetchpriority="high"><title>Where is the bunny?</title><link rel="stylesheet" href="style.css?v=illustrated-3"></head>
 <body><main>
 <header class="header"><a class="back" href="../../">← Назад</a><div class="title"><span class="eyebrow">LET’S PLAY & LEARN</span><h1>Where is the bunny?</h1></div><div class="score" aria-label="Score">⭐ <b id="score">0</b></div></header>
 <div class="tabs" aria-label="Game mode"><button class="tab active" data-mode="play" aria-pressed="true">📖 Карточки</button><button class="tab" data-mode="surprise" aria-pressed="false">⭐ Surprise me</button></div>
 <div class="instruction"><div id="prompt">Drag the bunny!</div><div id="relation" class="relation">ON</div></div>
 <div id="scene" class="scene" aria-label="Bunny’s room">
-<img class="room" src="assets/room.png" alt="A cozy illustrated playroom" draggable="false">
-<img class="object table" id="table" src="assets/table.png" alt="Table" draggable="false">
-<img class="object basket" id="basket" src="assets/basket.png" alt="Basket" draggable="false">
-<img class="object cup" id="cup" src="assets/cup.png" alt="Cup" draggable="false">
-<button class="bunny" id="bunny" aria-label="Bunny: drag me, or use arrow keys and Enter"><img src="assets/bunny.png" alt="" draggable="false"></button>
-<img class="object cup container-front cup-front" src="assets/cup.png" alt="" aria-hidden="true" draggable="false">
-<img class="object basket container-front basket-front" src="assets/basket.png" alt="" aria-hidden="true" draggable="false">
+<img class="room" fetchpriority="high" src="assets/room.webp" alt="A cozy illustrated playroom" draggable="false">
+<img class="object table" id="table" src="assets/table.webp" alt="Table" draggable="false">
+<img class="object basket" id="basket" src="assets/basket.webp" alt="Basket" draggable="false">
+<img class="object cup" id="cup" src="assets/cup.webp" alt="Cup" draggable="false">
+<button class="bunny" id="bunny" aria-label="Bunny: drag me, or use arrow keys and Enter"><img src="assets/bunny.webp" alt="" draggable="false"></button>
+<img class="object cup container-front cup-front" src="assets/cup.webp" alt="" aria-hidden="true" draggable="false">
+<img class="object basket container-front basket-front" src="assets/basket.webp" alt="" aria-hidden="true" draggable="false">
 <div id="confetti" class="confetti"></div>
 </div>
 <div id="feedback" class="feedback" role="status" aria-live="polite">Выбери карточку и перетащи зайку</div>
 <section class="card-section"><div class="section-heading"><h2>Choose a little adventure</h2><span>13 предлогов · выбирай и играй</span></div><section id="cards" class="cards" aria-label="Preposition cards"></section></section>
 <footer>Перетаскивай зайку мышкой или пальцем · Клавиатура: стрелки и Enter</footer>
-</main><script src="game.js?v=illustrated-3"></script></body></html>
+</main><script src="game.js?v=webp-1"></script></body></html>

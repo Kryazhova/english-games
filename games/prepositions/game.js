@@ -90,7 +90,7 @@
   function illustration(key) {
     const positions = {on:[.5,.465,30],under:[.5,.95,10],above:[.5,.34,30],next:[.20,.86,30],near:[.16,.92,30],far:[.12,.9,30],front:[.5,.98,30],behind:[.5,.67,10],between:[.5,.91,30],left:[.16,.86,30],right:[.85,.86,30],in:[.46,.78,30],inside:[.5,.78,30]};
     const [x,y,z] = positions[key];
-    const image = (name,style,cls='object') => `<img class="${cls}" src="assets/${name}.png" alt="" loading="lazy" draggable="false" style="${style}">`;
+    const image = (name,style,cls='object') => `<img class="${cls}" src="assets/${name}.webp" alt="" loading="lazy" draggable="false" style="${style}">`;
     const bg = image('room','opacity:.28','room');
     let objects;
     if (key === 'in' || key === 'inside') {
