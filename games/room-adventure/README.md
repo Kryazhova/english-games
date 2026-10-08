@@ -1,10 +1,9 @@
-# Room Adventure prototype
+# Room Adventure
 
-A real 2D English-learning game scaffold.
+A cozy illustrated room with eight English exploration missions: furniture, prepositions, there is / there are, colours and a treasure-key finale.
 
-Structure:
-- index.html — scene markup
-- style.css — visuals/layout
-- game.js — movement, collision, quests, score, levels, saved progress
+Tap a room object to walk to it and answer a short question. Arrow controls and keyboard movement also work; use Inspect when near an object. Russian hints and an English notebook are optional.
 
-Next iterations can add audio, sprite animation, richer physics, random tasks, inventory and multiple rooms.
+Progress uses the separate room-adventure-v2 localStorage key. Scores are derived from unique completed missions. Replay resets only this game. Art is optimized WebP; generation prompts are in ROOM-ART.md.
+
+Verified: all eight missions, wrong objects and answers, duplicate reward prevention, key and finale, saved progress, replay, movement bounds, keyboard input and corrupt progress recovery.
