@@ -20,7 +20,35 @@ const orders=[
 let guest=0,index=0,score=0,mistake=false,finished=false,best=0;
 try{best=Math.max(0,Number(localStorage.getItem('moonlightBarBest'))||0)}catch{}
 $('best').textContent=`Лучшая смена: ${best} ✦`;
-function say(text){if(!('speechSynthesis' in window)){ const message='Озвучка недоступна в этом браузере. Прочитай фразу вслух.';$('feedback').textContent=message;$('speech-status').textContent=message;return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=.85;speechSynthesis.speak(u)}
+let voicePrefs={accent:'en-US',uri:'',speed:1},englishVoices=[];
+try{const saved=JSON.parse(localStorage.getItem('moonlightBarVoice')||'null');if(saved){voicePrefs.accent=['en-US','en-GB'].includes(saved.accent)?saved.accent:'en-US';voicePrefs.uri=typeof saved.uri==='string'?saved.uri:'';voicePrefs.speed=saved.speed===.9?.9:1}}catch{}
+$('voice-accent').value=voicePrefs.accent;$('voice-speed').value=String(voicePrefs.speed);
+function saveVoice(){try{localStorage.setItem('moonlightBarVoice',JSON.stringify(voicePrefs))}catch{}}
+function voiceRank(v){return (/natural|neural|premium|enhanced|online/i.test(v.name)?100:0)+(/google|samantha|ava|allison|serena|susan/i.test(v.name)?20:0)+(!v.localService?10:0)}
+function loadVoices(){
+ const supported='speechSynthesis' in window;
+ englishVoices=supported?speechSynthesis.getVoices().filter(v=>/^en(?:[-_]|$)/i.test(v.lang)):[];
+ const accentVoices=englishVoices.filter(v=>v.lang.replace('_','-').toLowerCase()===voicePrefs.accent.toLowerCase());
+ const available=(accentVoices.length?accentVoices:englishVoices).slice().sort((a,b)=>voiceRank(b)-voiceRank(a)||a.name.localeCompare(b.name));
+ $('voice-name').replaceChildren();
+ for(const v of available){const option=document.createElement('option');option.value=v.voiceURI;option.textContent=v.name+' · '+v.lang;$('voice-name').append(option)}
+ const selected=available.find(v=>v.voiceURI===voicePrefs.uri)||available[0];
+ if(selected){$('voice-name').value=selected.voiceURI;voicePrefs.uri=selected.voiceURI}
+ $('voice-name').disabled=!selected;$('voice-preview').disabled=!selected;$('listen').disabled=!selected;
+ $('voice-status').textContent=!supported?'Этот браузер не поддерживает озвучку.':!selected?'Английские голоса пока недоступны. Добавь английский голос в настройках речи устройства.':!accentVoices.length?'Выбранный акцент недоступен. Используется другой английский голос; попробуй послушать пример.':'Выбери голос по звучанию. Набор и качество голосов зависят от устройства.';
+}
+function say(text){
+ const voice=englishVoices.find(v=>v.voiceURI===$('voice-name').value);
+ if(!voice){const message='Английский голос недоступен. Проверь настройки голоса над игрой.';$('feedback').textContent=message;$('speech-status').textContent=message;return}
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.voice=voice;u.lang=voice.lang;u.rate=voicePrefs.speed;u.pitch=1;
+ u.onerror=e=>{if(!['canceled','interrupted'].includes(e.error))$('voice-status').textContent='Не удалось воспроизвести голос. Попробуй другой голос в списке.'};speechSynthesis.speak(u);
+}
+$('voice-accent').onchange=()=>{voicePrefs.accent=$('voice-accent').value;voicePrefs.uri='';loadVoices();saveVoice();if('speechSynthesis' in window)speechSynthesis.cancel()};
+$('voice-name').onchange=()=>{voicePrefs.uri=$('voice-name').value;saveVoice();speechSynthesis.cancel()};
+$('voice-speed').onchange=()=>{voicePrefs.speed=Number($('voice-speed').value);saveVoice()};
+$('voice-preview').onclick=()=>say('Welcome to the Moonlight Bar. Would you like tea or coffee?');
+if('speechSynthesis' in window){speechSynthesis.addEventListener('voiceschanged',loadVoices);window.addEventListener('pagehide',()=>speechSynthesis.cancel())}loadVoices();
+
 function render(){const order=orders[guest],s=order.steps[index];$('progress').textContent=`Гость ${guest+1} / ${orders.length}`;$('score').textContent=`${score} ✦`;$('portrait').textContent=order.face;$('guest').textContent=order.name;$('order').textContent=order.text;$('translation').textContent=order.ru;$('translation').hidden=true;$('translate').textContent='Показать перевод';$('step-count').textContent=`Шаг ${index+1} / ${order.steps.length}`;$('instruction').textContent=s.text;$('hint-text').textContent=s.ru;$('hint-text').hidden=true;$('feedback').textContent='Выбери подходящее английское слово.';$('next').hidden=true;$('hint').disabled=false;$('choices').replaceChildren();mistake=false;
  const shuffled=[...s.options];for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}
  for(const key of shuffled){const [emoji,en]=words[key],b=document.createElement('button');b.className='choice';b.dataset.word=key;const icon=document.createElement('span');icon.className='emoji';icon.textContent=emoji;icon.setAttribute('aria-hidden','true');b.append(icon,document.createTextNode(en));b.onclick=()=>choose(key,b);$('choices').append(b)}
